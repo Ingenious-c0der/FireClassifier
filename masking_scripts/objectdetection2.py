@@ -7,7 +7,7 @@ from skimage.transform import resize
 folder='Fire'
 images=[]
 filename1 = "segmented_imgs/img/img75" ## something that changes in this loop -> you can set a complete path to manage folders
-i=1
+i=0
 def count_bright_pixels(hsv, threshold):
     # convert to HSV color space
     count=0
@@ -23,19 +23,38 @@ def count_bright_pixels(hsv, threshold):
     
     return count
 
-def big_jump(img):
-    max = 0
-    thres = 0
-    img = img.flatten()
-    img.sort()
-    list1 = []
+
+
+# def big_jump(img):
+#     max = 0
+#     thres = 0
+#     img = img.flatten()
+#     img.sort()
+#     list1 = []
     
-    for i in range(img.shape[0]-1):
-        if (img[i+1]!=img[i]):
-            # max = img[i+1]-img[i]
-            # thres = img[i]
-            list1.append(i)
-    return len(list1)
+#     for i in range(img.shape[0]-1):
+#         if (img[i+1]!=img[i]):
+#             # max = img[i+1]-img[i]
+#             # thres = img[i]
+#             list1.append(i)
+#     return len(list1)
+
+def custom_inRange(frame,lower,upper):
+    #tries to bring white pixels in the mask
+    output = np.zeros((540, 960)).astype(np.uint8)
+    for i in range(frame.shape[0]):
+        for j in range(frame.shape[1]):
+            if frame[i][j][0] >= lower[0] and frame[i][j][0] <= upper[0]:
+                if frame[i][j][1] >= lower[1] and frame[i][j][0] <= upper[1]:
+                    if frame[i][j][2] >= lower[2] and frame[i][j][0] <= upper[2]:
+                        output[i][j] = 255
+            if frame[i][j][2] >= 250:
+                output[i][j] = 255
+
+
+
+    
+    return output
 
 
 low_green = np.array([89, 200, 200])
@@ -72,25 +91,20 @@ for img in non_masked_images:
 
             ratio = (avg_brightness / bright_pixel_count)
             upper_v=255
-            print(i,ratio,top25_brightness)
-            #print(brightness, i)
-            # lower = [0, 74, 200]
-            # upper = [35, 255, 255]
-            # lower = [15,70,50]
-            # upper = [35,255,255]
-            if(top25_brightness > 210):
-                lower = [0, 70, top25_brightness]
-                upper = [65, 255, 255]
-            else:
-                lower = [0, 70, top25_brightness]
-                upper = [35, 255, 255]
+            
+
+            lower = [0, 70, top25_brightness]
+            upper = [35, 255, 255]
 
 
 
             lower = np.array(lower, dtype="uint8")
             upper = np.array(upper, dtype="uint8")
 
-            mask = cv2.inRange(hsv, lower, upper)
+            mask = custom_inRange(hsv, lower, upper)
+            print(i,ratio,top25_brightness,frame.shape, mask.shape)
+
+
 
             output = cv2.bitwise_and(frame, hsv, mask=mask)
             # mask2 = cv2.inRange(hsv, low_green, high_green)
@@ -117,8 +131,9 @@ for img in non_masked_images:
             #         if output[i, j].sum() >0 and output[i, j].sum() <765:
             #             output[i, j] = [0,0,0]  
                 
-            cv2.imwrite(filename1 + str(i)+ ".jpg", output)
+            cv2.imwrite(filename1+"Fire" + str(i)+ ".jpg", output)
             i=i+1
+
 
 
    
