@@ -6,7 +6,7 @@ from skimage.io import imread
 from skimage.transform import resize
 folder='Fire'
 images=[]
-filename1 = "segmented_imgs/img" ## something that changes in this loop -> you can set a complete path to manage folders
+filename1 = "segmented_imgs/img/img75" ## something that changes in this loop -> you can set a complete path to manage folders
 i=1
 def count_bright_pixels(hsv, threshold):
     # convert to HSV color space
@@ -22,6 +22,21 @@ def count_bright_pixels(hsv, threshold):
     #count = np.sum(mask)
     
     return count
+
+def big_jump(img):
+    max = 0
+    thres = 0
+    img = img.flatten()
+    img.sort()
+    list1 = []
+    
+    for i in range(img.shape[0]-1):
+        if (img[i+1]!=img[i]):
+            # max = img[i+1]-img[i]
+            # thres = img[i]
+            list1.append(i)
+    return len(list1)
+
 
 low_green = np.array([89, 200, 200])
 high_green = np.array([89, 255, 255])
@@ -42,17 +57,36 @@ for img in non_masked_images:
             #blur = cv2.GaussianBlur(frame, (21, 21), 0)
             hsv = cv2.cvtColor(rgb, cv2.COLOR_RGB2HSV)
 
+
+            
+
+            # big_jump_vars = big_jump(hsv[:,:,2])
+
             avg_brightness = np.mean(hsv[:,:,2])
+            top25_brightness = np.percentile(hsv[:,:,2],75)
+            top20_brightness = np.percentile(hsv[:,:,2],80)
+            top10_brightness = np.percentile(hsv[:,:,2],90)
             bright_pixel_count = count_bright_pixels(hsv, 254)
+
+
 
             ratio = (avg_brightness / bright_pixel_count)
             upper_v=255
-            print(ratio,i)
+            print(i,ratio,top25_brightness)
             #print(brightness, i)
             # lower = [0, 74, 200]
             # upper = [35, 255, 255]
-            lower = [15, 70, 50]
-            upper = [35, 255, 255]
+            # lower = [15,70,50]
+            # upper = [35,255,255]
+            if(top25_brightness > 210):
+                lower = [0, 70, top25_brightness]
+                upper = [65, 255, 255]
+            else:
+                lower = [0, 70, top25_brightness]
+                upper = [35, 255, 255]
+
+
+
             lower = np.array(lower, dtype="uint8")
             upper = np.array(upper, dtype="uint8")
 
