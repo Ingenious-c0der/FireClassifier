@@ -2,8 +2,6 @@ import cv2
 import numpy as np
 import os
 import re
-from skimage.io import imread
-from skimage.transform import resize
 folder='Fire'
 images=[]
 filename1 = "segmented_imgs/img" ## something that changes in this loop -> you can set a complete path to manage folders
