@@ -4,7 +4,7 @@ import os
 import re
 folder='Fire'
 images=[]
-filename1 = "segmented_imgs/img/img75" ## something that changes in this loop -> you can set a complete path to manage folders
+filename1 = "segmented_imgs/img/img75/" ## something that changes in this loop -> you can set a complete path to manage folders
 i=0
 def count_bright_pixels(hsv, threshold):
     # convert to HSV color space
@@ -46,7 +46,7 @@ def custom_inRange(frame,lower,upper):
                 if frame[i][j][1] >= lower[1] and frame[i][j][0] <= upper[1]:
                     if frame[i][j][2] >= lower[2] and frame[i][j][0] <= upper[2]:
                         output[i][j] = 255
-            if frame[i][j][2] >= 250:
+            if frame[i][j][2] >= 250 and frame[i][j][0] <= 60:
                 output[i][j] = 255
 
 
