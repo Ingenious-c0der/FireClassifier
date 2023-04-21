@@ -3,6 +3,8 @@ Flame/
 .zip
 X.pkl
 Y.pkl
+P.pkl
+Q.pkl
 variables/
 segmented_imgs_fire/
 segmented_images_flame/
