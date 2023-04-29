@@ -2,9 +2,10 @@ import cv2
 import numpy as np
 import os
 import re
-folder='Fire'
+input_folder='Flame_cropped'
+output_folder='Flame_cropped_masked'
 images=[]
-filename1 = "segmented_imgs/img/img75/" ## something that changes in this loop -> you can set a complete path to manage folders
+filename1 = "segmented_imgs/img/img75/" # something that changes in this loop -> you can set a complete path to manage input_folders
 i=0
 def count_bright_pixels(hsv, threshold):
     # convert to HSV color space
@@ -63,10 +64,10 @@ def sorted_alphanumeric(data):
     return sorted(data, key=alphanum_key)
 
 
-non_masked_images = os.listdir(folder)
+non_masked_images = os.listdir(input_folder)
 non_masked_images = sorted_alphanumeric(non_masked_images)
 for img in non_masked_images:
-        cv_image = cv2.imread(folder+"/"+img)
+        cv_image = cv2.imread(input_folder+"/"+img)
         if cv_image is not None:
             # cv_image = image = cv2.imread('image1.jpg')
             frame = cv2.resize(cv_image, (960, 540))
@@ -128,8 +129,8 @@ for img in non_masked_images:
             #         # check if it's [0, 0, 0] and replace with [255, 255, 255] if so
             #         if output[i, j].sum() >0 and output[i, j].sum() <765:
             #             output[i, j] = [0,0,0]  
-                
-            cv2.imwrite(filename1+"Fire" + str(i)+ ".jpg", output)
+            #print(output_folder+"/"+img +str(i) +".jpg") 
+            cv2.imwrite(output_folder+"/"+img, output)
             i=i+1
 
 
