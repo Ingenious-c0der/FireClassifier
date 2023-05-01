@@ -70,16 +70,16 @@ def getAttrributes(img):
     average_v = v_mat[np.nonzero(v_mat)].mean()
     return number_of_nonblackpixels,average_h,average_s,average_v
 
-def getArclengthAreaRatio(img):
+def getArclength(img):
     number_of_nonblackpixels = np.count_nonzero(img[:,:,2])
     contours, hierarchy = cv.findContours(img[:,:,2],cv.RETR_EXTERNAL,cv.CHAIN_APPROX_SIMPLE)
     total_arclength = 0
     for i in contours:
         total_arclength += cv.arcLength(i,True)
 
-    return total_arclength/number_of_nonblackpixels
+    return total_arclength
 
-def whitePixelsAreaRatio(img):
+def whitePixelsRatio(img):
     
     number_of_nonblackpixels = np.count_nonzero(img[:,:,2])
     return len(np.where(img[:,:,2]>250))/number_of_nonblackpixels
@@ -97,5 +97,5 @@ countours,c_sort_by_x,c_sort_by_y=contourprep(img)
 fire = getBaseWidthAndHeight(c_sort_by_y)
 print(fire,getSymmetryScore(c_sort_by_x,fire["base_midpoint"]))
 print('\n')
-print(whitePixelsAreaRatio(img),getArclengthAreaRatio(img),getAttrributes(img))
+print(whitePixelsRatio(img),getArclength(img),getAttrributes(img))
 print('\n')
