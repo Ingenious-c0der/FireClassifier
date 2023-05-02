@@ -3,12 +3,7 @@ Flame/
 combined_fire_flame/
 .zip
 *.zip
-X.pkl
-Y.pkl
-P.pkl
-Q.pkl
-A.pkl
-B.pkl
+*.pkl
 variables/
 segmented_imgs_fire/
 segmented_images_flame/
@@ -17,3 +12,4 @@ Fire_masked
 Flame_masked
 Flame_cropped
 Flame_cropped_masked
+Fire_full
