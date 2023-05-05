@@ -2,9 +2,11 @@ import cv2
 import numpy as np
 import os
 import re
-folder='Fire'
+import tqdm
+from tqdm import tqdm
+folder='Flame'
 images=[]
-filename1 = "segmented_imgs/img/img75/" ## something that changes in this loop -> you can set a complete path to manage folders
+filename1 = "segmented_imgs/img/Fire/" ## something that changes in this loop -> you can set a complete path to manage folders
 i=0
 def count_bright_pixels(hsv, threshold):
     # convert to HSV color space
@@ -65,7 +67,7 @@ def sorted_alphanumeric(data):
 
 non_masked_images = os.listdir(folder)
 non_masked_images = sorted_alphanumeric(non_masked_images)
-for img in non_masked_images:
+for img in tqdm(non_masked_images):
         cv_image = cv2.imread(folder+"/"+img)
         if cv_image is not None:
             # cv_image = image = cv2.imread('image1.jpg')
@@ -100,7 +102,7 @@ for img in non_masked_images:
             upper = np.array(upper, dtype="uint8")
 
             mask = custom_inRange(hsv, lower, upper)
-            print(i,ratio,top25_brightness,frame.shape, mask.shape)
+            #print(i,ratio,top25_brightness,frame.shape, mask.shape)
 
 
 
@@ -129,7 +131,7 @@ for img in non_masked_images:
             #         if output[i, j].sum() >0 and output[i, j].sum() <765:
             #             output[i, j] = [0,0,0]  
                 
-            cv2.imwrite(filename1+"Fire" + str(i)+ ".jpg", output)
+            cv2.imwrite(filename1+"Flame" + str(i)+ ".jpg", output)
             i=i+1
 
 
