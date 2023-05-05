@@ -65,7 +65,7 @@ def sorted_alphanumeric(data):
     return sorted(data, key=alphanum_key)
 
 
-non_masked_images = os.listdir(folder)
+non_masked_images = os.listdir(input_folder)
 non_masked_images = sorted_alphanumeric(non_masked_images)
 for img in tqdm(non_masked_images):
         cv_image = cv2.imread(folder+"/"+img)
