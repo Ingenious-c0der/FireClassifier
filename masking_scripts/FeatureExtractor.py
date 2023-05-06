@@ -1,7 +1,22 @@
-import cv2 as cv
-import math
-import numpy as np
+import re
 import os
+import numpy as np
+import cv2 as cv
+
+import math
+folder='/home/omkar/FireClassifier/segmented_imgs/img/Fire'
+images=[]
+filename1 = ''
+i=0
+
+
+
+
+
+def sorted_alphanumeric(data):
+    convert = lambda text: int(text) if text.isdigit() else text.lower()
+    alphanum_key = lambda key: [ convert(c) for c in re.split('([0-9]+)', key) ] 
+    return sorted(data, key=alphanum_key)
 
 def contourprep(img):
     img = img[:,:,2]
@@ -71,7 +86,7 @@ def getAttrributes(img):
     return number_of_nonblackpixels,average_h,average_s,average_v
 
 def getArclength(img):
-    number_of_nonblackpixels = np.count_nonzero(img[:,:,2])
+    #number_of_nonblackpixels = np.count_nonzero(img[:,:,2])
     contours, hierarchy = cv.findContours(img[:,:,2],cv.RETR_EXTERNAL,cv.CHAIN_APPROX_SIMPLE)
     total_arclength = 0
     for i in contours:
@@ -79,23 +94,26 @@ def getArclength(img):
 
     return total_arclength
 
-def whitePixelsRatio(img):
+def whitePixelsAreaRatio(img):
     
     number_of_nonblackpixels = np.count_nonzero(img[:,:,2])
     return len(np.where(img[:,:,2]>250))/number_of_nonblackpixels
 
-img = cv.imread('/home/omkar/FireClassifier/segmented_imgs/img/img75/Fire34.jpg')
-
-countours,c_sort_by_x,c_sort_by_y=contourprep(img)
 
 
 
+non_masked_images = os.listdir(folder)
+non_masked_images = sorted_alphanumeric(non_masked_images)
+for img in non_masked_images:
+        
+        cv_image = cv.imread(folder+"/"+img)
+        if cv_image is not None:
+            countours,c_sort_by_x,c_sort_by_y=contourprep(cv_image)
+            basewidth_Height_base_midpoint = getBaseWidthAndHeight(c_sort_by_y)
+            print(basewidth_Height_base_midpoint,getSymmetryScore(c_sort_by_x,basewidth_Height_base_midpoint["base_midpoint"]))
 
+            print(getArclengthAreaRatio(cv_image))
 
-
-
-fire = getBaseWidthAndHeight(c_sort_by_y)
-print(fire,getSymmetryScore(c_sort_by_x,fire["base_midpoint"]))
-print('\n')
-print(whitePixelsRatio(img),getArclength(img),getAttrributes(img))
-print('\n')
+                
+            #cv.imwrite(filename1+"Flame" + str(i)+ ".jpg", output)
+            i=i+1
