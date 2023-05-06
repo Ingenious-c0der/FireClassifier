@@ -3,8 +3,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Read image
-img = cv2.imread('Fire/fire.653.png')
-#img= cv2.imread('Flame_cropped/church-candles-red-yellow-transparent-260nw-84934867.jpg')
+img = cv2.imread('Fire/fire.654.png')
+img= cv2.imread('Flame_cropped/burning-candles-on-dark-wooden-260nw-134578730.jpg')
 # Convert the image to HSV format
 hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 
@@ -32,16 +32,30 @@ std_dev = np.std(pixel_count)
 spike_indices = []
 fall_indices = []
 for i in range(len(pixel_count)):
-    if pixel_count[i] > 100 and np.mean(pixel_count[i-2:i]) < 10:
-        spike_indices.append(i)
-    elif pixel_count[i] < 10 and np.mean(pixel_count[i-1:i]) > 100:
-        fall_indices.append(i)
+        if np.mean(pixel_count[i:i+2]) > 500 and np.mean(pixel_count[i-2:i]) < 10:
+            spike_indices.append(i)
+        elif np.mean(pixel_count[i:i+2]) < 2 and np.mean(pixel_count[i-2:i]) > 500:
+            fall_indices.append(i)
 
-# plt.plot(pixel_count)
-# plt.xlabel('X-coordinate')
-# plt.ylabel('Number of yellow pixels')
-# plt.title('Spike Indices: {}, Fall Indices: {}'.format(spike_indices, fall_indices))
-# plt.show()
+if (std_dev<1200):
+    if len(spike_indices)==len(fall_indices)==0:
+        
+        print("fire detected")
+    elif abs(len(spike_indices)-len(fall_indices))>2*min(len(spike_indices),len(fall_indices)):
+        
+        print("fire detected") 
+    else:
+        
+        print("flame detected")
+else:
+        
+        print("fire detected")
+
+plt.plot(pixel_count)
+plt.xlabel('X-coordinate')
+plt.ylabel('Number of yellow pixels')
+plt.title('Spike Indices: {}, Fall Indices: {}'.format(spike_indices, fall_indices))
+plt.show()
 print("std dev",std_dev)
 print("spike count",len(spike_indices))
 print("fall count",len(fall_indices))
