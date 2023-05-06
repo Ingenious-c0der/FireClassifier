@@ -3,7 +3,7 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.metrics import confusion_matrix
-from sklearn.metrics import confusion_matrix,precision_score,recall_score
+from sklearn.metrics import confusion_matrix,precision_score,recall_score,accuracy_score
 import re
 input_folder='combined_fire_flame'
 # output_folder='Flame_cropped_masked'
@@ -68,21 +68,24 @@ def predict(cv_image):
     spike_indices = []
     fall_indices = []
     for i in range(len(pixel_count)):
-        if pixel_count[i] > 100 and np.mean(pixel_count[i-2:i]) < 10:
+        if np.mean(pixel_count[i:i+1]) > 100 and np.mean(pixel_count[i-1:i]) < 10:
             spike_indices.append(i)
-        elif pixel_count[i] < 10 and np.mean(pixel_count[i-1:i]) > 100:
+        elif np.mean(pixel_count[i:i+1]) < 10 and np.mean(pixel_count[i-1:i]) > 100:
             fall_indices.append(i)
-    
-    if abs(len(spike_indices)-len(fall_indices))>1:
-        if(std_dev<1000):
+
+    if (std_dev<2500):
+        if len(spike_indices)==len(fall_indices)==0:
             y_pred.append(0)
-            print("flame detected")
+            print("fire detected")
+        elif abs(len(spike_indices)-len(fall_indices))>=2*min(len(spike_indices),len(fall_indices)):
+            y_pred.append(0)
+            print("fire detected") 
         else:
             y_pred.append(1)
-            print("fire detected")
+            print("flame detected")
     else:
-        y_pred.append(0)
-        print("flame detected")
+            y_pred.append(0)
+            print("fire detected")
 
 
 flame_files = os.listdir(flame_dir)
@@ -93,13 +96,13 @@ for filename in flame_files:
     img = prep_img(flame_dir + filename)
     img_array = cv2.imread(flame_dir + filename)
     predict(img_array)
-    y_true.append(0)  # 0 represents "flame" class
+    y_true.append(1)  # 1 represents "flame" class
 
 for filename in fire_files:
     img = prep_img(fire_dir + filename)
     img_array = cv2.imread(fire_dir + filename)
     predict(img_array)
-    y_true.append(1)  # 1 represents "fire" class
+    y_true.append(0)  # 0 represents "fire" class
 
 y_true = np.array(y_true)
 y_pred = np.array(y_pred)
@@ -110,6 +113,7 @@ y_pred = np.array(y_pred)
 # Compute and plot the confusion matrix
 cm = confusion_matrix(y_true, y_pred)
 print(cm)
+print("acuuracy: ",accuracy_score(y_true, y_pred))
 print("Precision: ",precision_score(y_true, y_pred))
 print("Recall: ",recall_score(y_true, y_pred))
 plt.matshow(cm)

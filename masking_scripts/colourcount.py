@@ -33,16 +33,30 @@ std_dev = np.std(pixel_count)
 spike_indices = []
 fall_indices = []
 for i in range(len(pixel_count)):
-    if pixel_count[i] > 100 and np.mean(pixel_count[i-2:i]) < 10:
-        spike_indices.append(i)
-    elif pixel_count[i] < 10 and np.mean(pixel_count[i-1:i]) > 100:
-        fall_indices.append(i)
+        if np.mean(pixel_count[i:i+2]) > 500 and np.mean(pixel_count[i-2:i]) < 10:
+            spike_indices.append(i)
+        elif np.mean(pixel_count[i:i+2]) < 2 and np.mean(pixel_count[i-2:i]) > 500:
+            fall_indices.append(i)
 
-# plt.plot(pixel_count)
-# plt.xlabel('X-coordinate')
-# plt.ylabel('Number of yellow pixels')
-# plt.title('Spike Indices: {}, Fall Indices: {}'.format(spike_indices, fall_indices))
-# plt.show()
+if (std_dev<1200):
+    if len(spike_indices)==len(fall_indices)==0:
+        
+        print("fire detected")
+    elif abs(len(spike_indices)-len(fall_indices))>2*min(len(spike_indices),len(fall_indices)):
+        
+        print("fire detected") 
+    else:
+        
+        print("flame detected")
+else:
+        
+        print("fire detected")
+
+plt.plot(pixel_count)
+plt.xlabel('X-coordinate')
+plt.ylabel('Number of yellow pixels')
+plt.title('Spike Indices: {}, Fall Indices: {}'.format(spike_indices, fall_indices))
+plt.show()
 print("std dev",std_dev)
 print("spike count",len(spike_indices))
 print("fall count",len(fall_indices))
