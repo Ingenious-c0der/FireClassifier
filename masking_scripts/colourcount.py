@@ -3,8 +3,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Read image
-img = cv2.imread('Fire/fire.654.png')
-img= cv2.imread('Flame_cropped/burning-candles-on-dark-wooden-260nw-134578730.jpg')
+#img = cv2.imread('Fire_full/fire.653.png')
+#img= cv2.imread('Flame_cropped/church-candles-red-yellow-transparent-260nw-84934867.jpg')
+img = cv2.imread('Flame_cropped/beautiful-candle-light-dark-background-260nw-528345052.jpg')
 # Convert the image to HSV format
 hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 
