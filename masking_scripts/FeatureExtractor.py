@@ -113,7 +113,4 @@ for img in non_masked_images:
             print(basewidth_Height_base_midpoint,getSymmetryScore(c_sort_by_x,basewidth_Height_base_midpoint["base_midpoint"]))
 
             print(getArclengthAreaRatio(cv_image))
-
-                
-            #cv.imwrite(filename1+"Flame" + str(i)+ ".jpg", output)
             i=i+1

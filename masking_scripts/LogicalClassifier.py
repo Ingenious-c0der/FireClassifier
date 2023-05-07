@@ -33,6 +33,16 @@ upper_orange = np.array([10, 255, 255])
 
 y_pred = []
 y_true = []
+
+def getArclength(img):
+    number_of_nonblackpixels = np.count_nonzero(img[:,:,2])
+    contours, hierarchy = cv2.findContours(img[:,:,2],cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
+    total_arclength = 0
+    for i in contours:
+        total_arclength += cv2.arcLength(i,True)
+    return total_arclength
+
+    
 def predict(cv_image):
     
     rgb = cv2.cvtColor(cv_image,cv2.COLOR_BGR2RGB)
